@@ -1,0 +1,26 @@
+{
+  "baublase": {
+    "settings": {
+      "header": {
+        "general": {
+          "name": "General"
+        },
+        "settings": {
+          "name": "Settings"
+        }
+      },
+
+      "enabled": {
+        "name": "Enabled"
+      },
+      "discord": {
+        "name": "Discord Server",
+        "text": "Join",
+        "description": "Click to join the Discord"
+      },
+      "bounty": {
+        "name": "Enabled Bounty"
+      }
+    }
+  }
+}
