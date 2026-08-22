@@ -42,4 +42,10 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
+    repositories {
+        maven("https://maven.laby.net/api/v1/maven/release/")
+        maven("https://gitlab.com/api/v4/projects/85257681/packages/maven")
+        mavenCentral()
+    }
 }

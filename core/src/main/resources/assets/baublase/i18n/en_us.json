@@ -1,6 +1,10 @@
 {
   "baublase": {
     "settings": {
+      "enabled": {
+        "name": "Enabled"
+      },
+
       "header": {
         "general": {
           "name": "General"
@@ -10,16 +14,28 @@
         }
       },
 
-      "enabled": {
-        "name": "Enabled"
-      },
       "discord": {
         "name": "Discord Server",
         "text": "Join",
         "description": "Click to join the Discord"
       },
+
+      "balance": {
+        "name": "Enable balance",
+        "tag": "Balance: %s"
+      },
+
       "bounty": {
-        "name": "Enabled Bounty"
+        "name": "Enable Bounty",
+        "tag": "Bounty: %s"
+      },
+
+      "worth": {
+        "name": "Enable Worth",
+        "price": {
+          "sell": "Sell Price: %s",
+          "buy": "Buy Price: %s"
+        }
       }
     }
   }

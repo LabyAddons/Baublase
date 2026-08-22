@@ -3,9 +3,7 @@ import net.labymod.labygradle.common.extension.LabyModAnnotationProcessorExtensi
 dependencies {
     labyProcessor()
     api(project(":api"))
-
-    // An example of how to add an external dependency that is used by the addon.
-    // addonMavenDependency("org.jeasy:easy-random:5.0.0")
+    addonMavenDependency("net.baublase.publicapi:baublase-public-api-java-client:1.1.0")
 }
 
 labyModAnnotationProcessor {

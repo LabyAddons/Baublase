@@ -1,4 +1,4 @@
-package de.jardateien.baublase;
+package de.jardateien.baublase.config;
 
 import net.labymod.api.Laby;
 import net.labymod.api.addon.AddonConfig;
@@ -32,9 +32,18 @@ public class BaublaseConfiguration extends AddonConfig {
 
   @SettingSection(value = "settings")
   @IntroducedIn(namespace = "baublase", value = "1.0.0")
+  @SpriteSlot(y = 1, size = 32)
+  @SwitchSetting
+  private final ConfigProperty<Boolean> bounty = new ConfigProperty<>(true);
+  @IntroducedIn(namespace = "baublase", value = "1.0.0")
   @SpriteSlot(x = 2, size = 32)
   @SwitchSetting
-  private final ConfigProperty<Boolean> bounty = new ConfigProperty<>(false);
+  private final ConfigProperty<Boolean> balance = new ConfigProperty<>(false);
+
+  @IntroducedIn(namespace = "baublase", value = "1.0.0")
+  @SpriteSlot(x = 3, size = 32)
+  @SwitchSetting
+  private final ConfigProperty<Boolean> worth = new ConfigProperty<>(false);
 
   //GETTER
 
@@ -45,5 +54,11 @@ public class BaublaseConfiguration extends AddonConfig {
 
   public ConfigProperty<Boolean> bounty() {
     return this.bounty;
+  }
+  public ConfigProperty<Boolean> worth() {
+    return this.worth;
+  }
+  public ConfigProperty<Boolean> balance() {
+    return this.balance;
   }
 }
