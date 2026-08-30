@@ -1,3 +1,4 @@
+
   name: Discord Build Notification
 
   on:
@@ -15,21 +16,29 @@
         actions: read
 
       steps:
-        - name: Create Download Link
-          id: download
+        - name: Get Artifact
+          id: artifact
           env:
-            BUILD_ID: ${{ steps.artifact.outputs.build_id }}
-            REPOSITORY: ${{ github.event.repository.name }}
+            GH_TOKEN: ${{ github.token }}
             RUN_ID: ${{ github.event.workflow_run.id }}
           run: |
-            DOWNLOAD_URL="https://github.com/LabyAddons/${REPOSITORY}/actions/runs/$RUN_ID/artifacts/$BUILD_ID"
-            echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+            BUILD_ID=$(curl -s \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts" \
+              | jq -r '.artifacts[] | select(.name == "Artifacts") | .id')
+            
+            echo "build_id=$BUILD_ID" >> "$GITHUB_OUTPUT"
 
         - name: Send Discord Webhook
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-            DOWNLOAD_URL: ${{ steps.download.outputs.url }}
+            REPOSITORY: ${{ github.event.repository.name }}
+            RUN_ID: ${{ github.event.workflow_run.id }}
+            BUILD_ID: ${{ steps.artifact.outputs.build_id }}
           run: |
+            DOWNLOAD_URL="https://github.com/LabyAddons/${REPOSITORY}/actions/runs/${RUN_ID}/artifacts/${BUILD_ID}"
+            
             curl -H "Content-Type: application/json" \
               -X POST \
               -d "{
