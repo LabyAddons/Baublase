@@ -21,13 +21,13 @@
       },
 
       "balance": {
-        "name": "Enable balance",
-        "tag": "Balance: %s"
+        "name": "Enable Balance",
+        "tag": "\uD83D\uDCB5 %s $"
       },
 
       "bounty": {
         "name": "Enable Bounty",
-        "tag": "Bounty: %s"
+        "tag": "\uD83D\uDC80 %s $"
       },
 
       "worth": {
