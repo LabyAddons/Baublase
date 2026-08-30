@@ -1,4 +1,3 @@
-
   name: Discord Build Notification
 
   on:
@@ -25,7 +24,7 @@
             ARTIFACT_URL=$(curl -s \
               -H "Authorization: Bearer $GH_TOKEN" \
               -H "Accept: application/vnd.github+json" \
-              "https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts" \
               | jq -r '.artifacts[] | select(.name == "Artifacts") | .archive_download_url')
             
             echo "url=$ARTIFACT_URL" >> "$GITHUB_OUTPUT"
@@ -34,6 +33,7 @@
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
             ARTIFACT_URL: ${{ steps.artifact.outputs.url }}
+            REPOSITORY: ${{ github.event.repository.name }}
           run: |
             curl -H "Content-Type: application/json" \
               -X POST \
@@ -50,8 +50,8 @@
                       \"inline\": false
                     },
                     {
-                      \"name\": \"🔀 Repository\",
-                      \"value\": \"`${{ github.repository }}`\",
+                      \"name\": \"📁 Repository\",
+                      \"value\": \"`${REPOSITORY}`\",
                       \"inline\": true
                     },
                     {
@@ -66,3 +66,4 @@
                 }]
               }" \
               "$DISCORD_WEBHOOK"
+
