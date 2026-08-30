@@ -38,7 +38,15 @@ public class BountyNameTag extends ComponentNameTag {
     if(bounty == null)
       return super.buildComponents(snapshot);
 
-    return List.of(Component.translatable("baublase.settings.bounty.tag",
-        Component.text(FormatUtil.getFormat(bounty.totalAmount(), RoundingMode.HALF_DOWN))));
+    return List.of(
+        Component.translatable("baublase.settings.bounty.tag",
+            Component.text(
+                FormatUtil.getFormat(
+                    bounty.totalAmount(),
+                    RoundingMode.HALF_DOWN
+                )
+            )
+        )
+    );
   }
 }

@@ -38,8 +38,16 @@ public class BalanceNameTag extends ComponentNameTag {
     if(balance == null || balance.balance() < 0)
       return super.buildComponents(snapshot);
 
-    return List.of(Component.translatable("baublase.settings.balance.tag",
-        Component.text(FormatUtil.getFormat(balance.balance(), RoundingMode.HALF_DOWN))));
+    return List.of(
+        Component.translatable("baublase.settings.balance.tag",
+            Component.text(
+                FormatUtil.getFormat(
+                    balance.balance(),
+                    RoundingMode.HALF_DOWN
+                )
+            )
+        )
+    );
   }
 
 

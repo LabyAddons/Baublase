@@ -38,12 +38,12 @@ public class BaublaseConfiguration extends AddonConfig {
   @IntroducedIn(namespace = "baublase", value = "1.0.0")
   @SpriteSlot(x = 2, size = 32)
   @SwitchSetting
-  private final ConfigProperty<Boolean> balance = new ConfigProperty<>(false);
+  private final ConfigProperty<Boolean> balance = new ConfigProperty<>(true);
 
   @IntroducedIn(namespace = "baublase", value = "1.0.0")
   @SpriteSlot(x = 3, size = 32)
   @SwitchSetting
-  private final ConfigProperty<Boolean> worth = new ConfigProperty<>(false);
+  private final ConfigProperty<Boolean> worth = new ConfigProperty<>(true);
 
   //GETTER
 
