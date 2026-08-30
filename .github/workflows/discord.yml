@@ -18,17 +18,17 @@
         - name: Create Download Link
           id: download
           env:
-            REPO: ${{ github.repository }}
+            BUILD_ID: ${{ steps.artifact.outputs.build_id }}
+            REPOSITORY: ${{ github.event.repository.name }}
             RUN_ID: ${{ github.event.workflow_run.id }}
           run: |
-            DOWNLOAD_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+            DOWNLOAD_URL="https://github.com/LabyAddons/${REPOSITORY}/actions/runs/$RUN_ID/artifacts/$BUILD_ID"
             echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
 
         - name: Send Discord Webhook
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
             DOWNLOAD_URL: ${{ steps.download.outputs.url }}
-            REPOSITORY: ${{ github.event.repository.name }}
           run: |
             curl -H "Content-Type: application/json" \
               -X POST \
