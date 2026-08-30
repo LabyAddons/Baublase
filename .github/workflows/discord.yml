@@ -15,24 +15,19 @@
         actions: read
 
       steps:
-        - name: Get Artifact
-          id: artifact
+        - name: Create Download Link
+          id: download
           env:
-            GH_TOKEN: ${{ github.token }}
+            REPO: ${{ github.repository }}
             RUN_ID: ${{ github.event.workflow_run.id }}
           run: |
-            ARTIFACT_URL=$(curl -s \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts" \
-              | jq -r '.artifacts[] | select(.name == "Artifacts") | .archive_download_url')
-            
-            echo "url=$ARTIFACT_URL" >> "$GITHUB_OUTPUT"
+            DOWNLOAD_URL="https://github.com/$REPO/actions/runs/$RUN_ID"
+            echo "url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
 
         - name: Send Discord Webhook
           env:
             DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-            ARTIFACT_URL: ${{ steps.artifact.outputs.url }}
+            DOWNLOAD_URL: ${{ steps.download.outputs.url }}
             REPOSITORY: ${{ github.event.repository.name }}
           run: |
             curl -H "Content-Type: application/json" \
@@ -46,7 +41,7 @@
                   \"fields\": [
                     {
                       \"name\": \"📦 Download\",
-                      \"value\": \"[**⬇️ Artifact herunterladen**]($ARTIFACT_URL)\",
+                      \"value\": \"[**⬇️ Artifact herunterladen**]($DOWNLOAD_URL)\",
                       \"inline\": false
                     },
                     {
@@ -66,4 +61,3 @@
                 }]
               }" \
               "$DISCORD_WEBHOOK"
-
