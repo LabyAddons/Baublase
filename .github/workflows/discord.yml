@@ -1,4 +1,3 @@
-
   name: Discord Build Notification
 
   on:
@@ -44,32 +43,24 @@
             curl -H "Content-Type: application/json" \
               -X POST \
               -d "{
-                \"username\": \"LabyAddon Build\",
-                \"embeds\": [{
-                  \"title\": \"✅ LabyAddon Build erfolgreich\",
-                  \"description\": \"Ein neuer Build wurde erfolgreich erstellt.\",
-                  \"color\": 5763719,
-                  \"fields\": [
-                    {
-                      \"name\": \"📦 Download\",
-                      \"value\": \"[**⬇️ Artifact herunterladen**](${DOWNLOAD_URL})\",
-                      \"inline\": false
-                    },
-                    {
-                      \"name\": \"📁 Repository\",
-                      \"value\": \"`${REPOSITORY}`\",
-                      \"inline\": true
-                    },
-                    {
-                      \"name\": \"🔢 Build\",
-                      \"value\": \"#${BUILD_NUMBER}\",
-                      \"inline\": true
+                "username": "LabyAddon",
+                "embeds": [
+                  {
+                    "title": "🚀  LabyAddon Build",
+                    "description": "## ✅ ${REPOSITORY} Build erfolgreich\n\nDer neue Build wurde erfolgreich erstellt und steht jetzt zum Download bereit.",
+                    "color": 5763719,
+                    "fields": [
+                      {
+                        "name": "📦  Download",
+                        "value": ">>> [**⬇️  Artifact herunterladen**](${DOWNLOAD_URL})",
+                        "inline": false
+                      }
+                    ],
+                    "footer": {
+                      "text": "LabyAddon • GitHub Actions",
+                      "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
                     }
-                  ],
-                  \"footer\": {
-                    \"text\": \"GitHub Actions • LabyAddon\"
                   }
-                }]
+                ]
               }" \
               "$DISCORD_WEBHOOK"
-
