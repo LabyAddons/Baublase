@@ -52,7 +52,7 @@
                     "fields": [
                       {
                         "name": "📦  Download",
-                        "value": ">>> [**⬇️  Artifact herunterladen**](${DOWNLOAD_URL})",
+                        "value": ">>> [**⬇️  Herunterladen**](${DOWNLOAD_URL})",
                         "inline": false
                       }
                     ],
