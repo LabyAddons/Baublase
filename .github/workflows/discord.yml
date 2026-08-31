@@ -1,3 +1,4 @@
+
   name: Discord Build Notification
 
   on:
@@ -43,24 +44,23 @@
             curl -H "Content-Type: application/json" \
               -X POST \
               -d "{
-                "username": "LabyAddon",
-                "embeds": [
-                  {
-                    "title": "🚀  LabyAddon Build",
-                    "description": "## ✅ ${REPOSITORY} Build erfolgreich\n\nDer neue Build wurde erfolgreich erstellt und steht jetzt zum Download bereit.",
-                    "color": 5763719,
-                    "fields": [
-                      {
-                        "name": "📦  Download",
-                        "value": ">>> [**⬇️  Herunterladen**](${DOWNLOAD_URL})",
-                        "inline": false
-                      }
-                    ],
-                    "footer": {
-                      "text": "LabyAddon • GitHub Actions",
-                      "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                \"username\": \"LabyAddon Github\",
+                \"embeds\": [{
+                  \"title\": \"✅ LabyAddon • ${REPOSITORY}\",
+                  \"description\": \"### ✅ Der Build wurde erfolgreich erstellt und kann jetzt heruntergeladen werden.\",
+                  \"color\": 5763719,
+                  \"fields\": [
+                    {
+                      \"name\": \"📦 Download\",
+                      \"value\": \"[**⬇️ Herunterladen**](${DOWNLOAD_URL})\",
+                      \"inline\": false
                     }
+                  ],
+                  \"footer\": {
+                    \"text\": \"GitHub Actions • LabyAddon\"
+                    \"icon_url\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\"
                   }
-                ]
+                }]
               }" \
               "$DISCORD_WEBHOOK"
+
