@@ -46,7 +46,7 @@
               -d "{
                 \"username\": \"LabyAddon Github\",
                 \"embeds\": [{
-                  \"title\": \"✅ LabyAddon • ${REPOSITORY}\",
+                  \"title\": \"✅ LabyAddon • ${REPOSITORY} (#${BUILD_NUMBER})\",
                   \"description\": \"### ✅ Der Build wurde erfolgreich erstellt und kann jetzt heruntergeladen werden.\",
                   \"color\": 5763719,
                   \"fields\": [
@@ -57,7 +57,7 @@
                     }
                   ],
                   \"footer\": {
-                    \"text\": \"GitHub Actions • LabyAddon\"
+                    \"text\": \"GitHub Actions • LabyAddon\",
                     \"icon_url\": \"https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png\"
                   }
                 }]
