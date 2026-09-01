@@ -45,9 +45,10 @@
               -X POST \
               -d "{
                 \"username\": \"LabyAddon Github\",
+                \"avatar_url\": \"https://avatars.githubusercontent.com/u/205626306\",
                 \"embeds\": [{
-                  \"title\": \"✅ LabyAddon • ${REPOSITORY} (#${BUILD_NUMBER})\",
-                  \"description\": \"### ✅ Der Build wurde erfolgreich erstellt und kann jetzt heruntergeladen werden.\",
+                  \"title\": \"✅ ### LabyAddon • ${REPOSITORY} (#${BUILD_NUMBER})\",
+                  \"description\": \"Der Build wurde erfolgreich erstellt!\",
                   \"color\": 5763719,
                   \"fields\": [
                     {
