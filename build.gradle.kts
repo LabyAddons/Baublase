@@ -25,7 +25,7 @@ labyMod {
         namespace = "baublase"
         displayName = "Baublase"
         author = "JarDateien"
-        description = "EDIT TEXT"
+        description = "Shows Balance, Bounty, and item prices directly in-game."
         minecraftVersion = "*"
         version = rootProject.version.toString()
     }
