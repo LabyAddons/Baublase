@@ -38,7 +38,6 @@
             RUN_ID: ${{ github.event.workflow_run.id }}
             BUILD_ID: ${{ steps.artifact.outputs.build_id }}
             BUILD_NUMBER: ${{ github.event.workflow_run.run_number }}
-            COMMIT_MESSAGE: ${{ steps.build.outputs.commit_message }}
           run: |
             DOWNLOAD_URL="https://github.com/LabyAddons/${REPOSITORY}/actions/runs/${RUN_ID}/artifacts/${BUILD_ID}"
             
@@ -49,12 +48,12 @@
                 \"avatar_url\": \"https://avatars.githubusercontent.com/u/205626306\",
                 \"embeds\": [{
                   \"title\": \"✅ LabyAddon • ${REPOSITORY} (#${BUILD_NUMBER})\",
-                  \"description\": \"Der Build wurde erfolgreich erstellt!\n${COMMIT_MESSAGE}\",
+                  \"description\": \"Der Build wurde erfolgreich erstellt!\",
                   \"color\": 5763719,
                   \"fields\": [
                     {
-                      \"name\": \"📦 Download\",
-                      \"value\": \"[**⬇️ Herunterladen**](${DOWNLOAD_URL})\",
+                      \"name\": \"⬇️ Download\",
+                      \"value\": \"[**• Klick hier •**](${DOWNLOAD_URL})\",
                       \"inline\": false
                     }
                   ],
