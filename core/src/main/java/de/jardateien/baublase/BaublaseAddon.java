@@ -8,23 +8,18 @@ import de.jardateien.baublase.utils.BaublaseHandler;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.entity.player.tag.PositionType;
-import net.labymod.api.client.session.Session;
 import net.labymod.api.models.addon.annotation.AddonMain;
 
 @AddonMain
 public class BaublaseAddon extends LabyAddon<BaublaseConfiguration> {
 
   private final BaublaseHandler handler = new BaublaseHandler();
+  private AuthenticatorListener authenticatorListener;
 
   @Override
   protected void enable() {
-    this.registerListener(new AuthenticatorListener(this));
-
-    Session session = labyAPI().minecraft().sessionAccessor().getSession();
-    if(session != null) {
-      this.handler.authenticate(session.getUsername(), session.getUniqueId().toString(), session.getAccessToken());
-      this.handler.loadItemPrices();
-    }
+    this.authenticatorListener = new AuthenticatorListener(this);
+    this.registerListener(this.authenticatorListener);
 
     Laby.references().tagRegistry().register(
         "baublase_bounty",
@@ -39,6 +34,20 @@ public class BaublaseAddon extends LabyAddon<BaublaseConfiguration> {
     );
 
     this.registerSettingCategory();
+  }
+
+  @Override
+  protected void onDeactivated() {
+    if (this.authenticatorListener != null) {
+      this.authenticatorListener.deactivate();
+    }
+  }
+
+  @Override
+  protected void onActivated() {
+    if (this.authenticatorListener != null) {
+      this.authenticatorListener.refreshCurrentServer();
+    }
   }
 
   public BaublaseHandler getHandler() {

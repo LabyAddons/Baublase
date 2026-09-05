@@ -1,81 +1,136 @@
 package de.jardateien.baublase.api.util;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ExpiringCache<K, V> {
 
-  private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(
-      r -> {
-        Thread thread = new Thread(r, "ExpiringCache-Scheduler");
+  private static final ScheduledExecutorService SCHEDULER =
+      Executors.newSingleThreadScheduledExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "Baublase-Cache");
         thread.setDaemon(true);
         return thread;
-      }
-  );
+      });
 
-  private final ConcurrentHashMap<K, Entry<V>> store = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<K, Entry<V>> store =
+      new ConcurrentHashMap<>();
+
   private final long ttlMillis;
-  private final ScheduledFuture<?> task;
+  private final ScheduledFuture<?> purgeTask;
 
   public ExpiringCache(long duration, TimeUnit unit) {
+    if (duration <= 0) {
+      throw new IllegalArgumentException("Cache duration must be greater than 0");
+    }
+
     this.ttlMillis = unit.toMillis(duration);
-    long period = Math.max(1, this.ttlMillis / 3);
-    this.task = scheduler.scheduleAtFixedRate(this::purge, period, period, unit);
+
+    long purgeInterval = Math.clamp(this.ttlMillis / 3,
+        1_000L, 10_000L);
+
+    this.purgeTask = SCHEDULER.scheduleAtFixedRate(
+        this::purge,
+        purgeInterval,
+        purgeInterval,
+        TimeUnit.MILLISECONDS
+    );
   }
 
+  /**
+   * Stores a value with the configured expiration time.
+   */
   public void put(K key, V value) {
+    if (key == null || value == null) {
+      return;
+    }
+
     long expiresAt = System.currentTimeMillis() + this.ttlMillis;
-    this.store.put(key, new Entry<>(value, expiresAt));
+
+    this.store.put(
+        key,
+        new Entry<>(value, expiresAt)
+    );
   }
 
+  /**
+   * Returns the cached value if it has not expired.
+   */
   public V get(K key) {
+    if (key == null) {
+      return null;
+    }
+
     Entry<V> entry = this.store.get(key);
+
     if (entry == null) {
       return null;
     }
 
     if (entry.isExpired()) {
-      this.store.remove(key);
+      /*
+       * Only remove the entry if it is still the same entry.
+       *
+       * This prevents an older cache entry from accidentally
+       * removing a newer value that was inserted concurrently.
+       */
+      this.store.remove(key, entry);
       return null;
     }
-    return entry.value;
+
+    return entry.value();
   }
 
-  public boolean containsKey(K key) {
-    return get(key) != null;
-  }
-
-  public void remove(K key) {
-    this.store.remove(key);
-  }
-
+  /**
+   * Removes all cached values.
+   */
   public void clear() {
     this.store.clear();
   }
 
-  public void shutdown() {
-    this.task.cancel(false);
+  /**
+   * Returns the current number of cached entries.
+   */
+  public int size() {
+    return this.store.size();
   }
 
+  /**
+   * Stops the purge task for this cache.
+   */
+  public void shutdown() {
+    this.purgeTask.cancel(false);
+    this.store.clear();
+  }
+
+  /**
+   * Removes expired entries.
+   */
   private void purge() {
+    long now = System.currentTimeMillis();
+
     for (Map.Entry<K, Entry<V>> entry : this.store.entrySet()) {
-      if (entry.getValue().isExpired()) {
-        this.store.remove(entry.getKey());
+      Entry<V> value = entry.getValue();
+
+      if (value.expirationTime() <= now) {
+        this.store.remove(entry.getKey(), value);
       }
     }
   }
 
-  public static class Entry<V> {
-    private final V value;
-    private final long expirationTime;
-
-    public Entry(V value, long expirationTime) {
-      this.value = value;
-      this.expirationTime = expirationTime;
-    }
+  /**
+   * Immutable cache entry.
+   */
+  public record Entry<V>(
+      V value,
+      long expirationTime
+  ) {
 
     public boolean isExpired() {
-      return System.currentTimeMillis() > this.expirationTime;
+      return System.currentTimeMillis() >= this.expirationTime;
     }
   }
 }
